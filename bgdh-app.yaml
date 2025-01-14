@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bgdh-app
+  namespace: argocd
+spec:
+  destination:
+    namespace: bgdh
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/rayjang111/gitops-cookbook-sc.git
+    path: ch07/bgdh
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true  # 불필요한 리소스 제거 기본값 false
+      selfHeal: true  # 실시간으로 상태 불일치 수정 기본값 false

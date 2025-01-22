@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: bgd-app
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/rayjang111/gitops-cookbook-sc.git
+        revision: main
+        directories:
+          - path: ch08/bgd-gen/*
+  template:
+    metadata:
+      name: '{{path[0]}}-{{path[2]}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/rayjang111/gitops-cookbook-sc.git'
+        targetRevision: main
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path.basename}}'
+      syncPolicy:
+        automated: # 자동 동기화 활성화
+          prune: true
+          selfHeal: true
